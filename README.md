@@ -4,6 +4,14 @@ LazyAlias is a command-line tool that helps you manage and execute frequently us
 
 ## Installation
 
+#### With brew
+
+```bash
+brew install sergiorivas/tap/lazyalias
+```
+
+#### With go
+
 ```bash
 go install github.com/sergiorivas/lazyalias/cmd/lazyalias@latest
 ```
