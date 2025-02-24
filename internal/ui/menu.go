@@ -19,7 +19,7 @@ func (ui *UI) ShowProjectMenu(projects []config.Project) (config.Project, error)
 		Selected: "• Selected Project: {{ .Name | green }}",
 		Details: `
 --------- Project ----------
-{{ "Name:" | faint }}	{{ .Key }}
+{{ "Name:" | faint }}	{{ .Name }}
 {{ "Commands:" | faint }}	{{ len .Commands }} available
 {{ if .Folder }}{{ "Folder:" | faint }}	{{ .Folder }}{{ end }}`,
 	}
