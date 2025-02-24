@@ -14,9 +14,13 @@ import (
 )
 
 var (
-	version     = "v0.1.2"
+	version     = "v0.1.3"
 	showVersion = flag.Bool("version", false, "show version information")
 )
+
+func grayText(text string) string {
+	return fmt.Sprintf("\033[90m%s\033[0m", text)
+}
 
 // getCurrentProjectName returns the name of the current directory
 func getCurrentProjectName() (string, error) {
@@ -108,14 +112,13 @@ func main() {
 
 	cmd := r.PrepareCommand(ctx)
 
-	fmt.Printf("\n💻 Command to execute:\n")
-	fmt.Printf("------------------------\n")
-	fmt.Printf("%s\n\n", cmd)
-
 	if err := r.CopyToClipboard(cmd); err != nil {
 		fmt.Printf("Could not copy to clipboard: %v\n", err)
-		fmt.Printf("Please copy the command manually\n")
+		fmt.Printf("Please copy the command manually")
 	} else {
-		fmt.Printf("📋 Command has been copied to clipboard!\n")
+		fmt.Printf(grayText("Command has been copied to clipboard!"))
 	}
+
+	fmt.Printf(grayText("\nCommand to execute:"))
+	fmt.Printf("\n%s\n", cmd)
 }
