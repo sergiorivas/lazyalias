@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -10,6 +11,11 @@ import (
 	"github.com/sergiorivas/lazyalias/internal/config"
 	"github.com/sergiorivas/lazyalias/internal/runner"
 	"github.com/sergiorivas/lazyalias/internal/ui"
+)
+
+var (
+	version     = "v0.1.2"
+	showVersion = flag.Bool("version", false, "show version information")
 )
 
 // getCurrentProjectName returns the name of the current directory
@@ -40,6 +46,12 @@ func findProjectByName(cfg config.Config, name string) (config.Project, bool) {
 }
 
 func main() {
+	flag.Parse()
+
+	if *showVersion {
+		fmt.Printf("lazyalias version %s\n", version)
+		return
+	}
 
 	fmt.Printf("Welcome to LAZYALIAS 🎉🎉🎉\n")
 	// Load configuration
