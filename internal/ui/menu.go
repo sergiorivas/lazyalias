@@ -16,7 +16,7 @@ func (ui *UI) ShowProjectMenu(projects []config.Project) (config.Project, error)
 		Label:    "{{ . }}",
 		Active:   "👉 {{ .Name | cyan }}",
 		Inactive: "  {{ .Name | white }}",
-		Selected: "• Selected Project: {{ .Name | green }}",
+		Selected: "🗂️ Selected Project: {{ .Name | green }}",
 		Details: `
 --------- Project ----------
 {{ "Name:" | faint }}	{{ .Name }}
@@ -40,11 +40,17 @@ func (ui *UI) ShowProjectMenu(projects []config.Project) (config.Project, error)
 }
 
 func (ui *UI) ShowCommandMenu(commands []config.Command) (config.Command, error) {
+	backCommand := config.Command{
+		Name:    "⬅️ Back to Projects",
+		Command: "back-to-project",
+	}
+	allCommands := append(commands, backCommand)
+
 	templates := &promptui.SelectTemplates{
 		Label:    "{{ . }}",
 		Active:   "👉 {{ .Name | cyan }}",
 		Inactive: "  {{ .Name | white }}",
-		Selected: "• Selected Command: {{ .Name | green }}",
+		Selected: "{{ if ne .Command \"back-to-project\" }}📟 Selected Command: {{ .Name | green }} {{ else }}{{ .Name }} {{ end }}",
 		Details: `
 --------- Command ----------
 {{ "Name:" | faint }}	{{ .Name }}
@@ -53,7 +59,7 @@ func (ui *UI) ShowCommandMenu(commands []config.Command) (config.Command, error)
 
 	prompt := promptui.Select{
 		Label:     "Select Command",
-		Items:     commands,
+		Items:     allCommands,
 		Templates: templates,
 		Size:      10,
 	}
@@ -63,5 +69,5 @@ func (ui *UI) ShowCommandMenu(commands []config.Command) (config.Command, error)
 		return config.Command{}, err
 	}
 
-	return commands[i], nil
+	return allCommands[i], nil
 }

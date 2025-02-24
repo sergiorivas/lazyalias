@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	version     = "v0.1.3"
+	version     = "v0.1.4"
 	showVersion = flag.Bool("version", false, "show version information")
 )
 
@@ -79,15 +79,14 @@ func main() {
 		log.Fatal(err)
 	}
 
+	var projects []config.Project
+	for _, p := range cfg {
+		projects = append(projects, p)
+	}
+
 	if matchedProject, found := findProjectByName(cfg, currentProjectName); found {
 		project = matchedProject
 	} else {
-		// If no match, show project selection menu
-		var projects []config.Project
-		for _, p := range cfg {
-			projects = append(projects, p)
-		}
-
 		project, err = ui.ShowProjectMenu(projects)
 		if err != nil {
 			log.Fatal(err)
@@ -97,6 +96,22 @@ func main() {
 	command, err := ui.ShowCommandMenu(project.Commands)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	for {
+		if command.Command != "back-to-project" {
+			break
+		}
+
+		project, err = ui.ShowProjectMenu(projects)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		command, err = ui.ShowCommandMenu(project.Commands)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	r, err := runner.NewRunner()
@@ -114,11 +129,11 @@ func main() {
 
 	if err := r.CopyToClipboard(cmd); err != nil {
 		fmt.Printf("Could not copy to clipboard: %v\n", err)
-		fmt.Printf("Please copy the command manually")
+		fmt.Print("Please copy the command manually")
 	} else {
-		fmt.Printf(grayText("Command has been copied to clipboard!"))
+		fmt.Print(grayText("Command has been copied to clipboard!"))
 	}
 
-	fmt.Printf(grayText("\nCommand to execute:"))
+	fmt.Print(grayText("\nCommand to execute:"))
 	fmt.Printf("\n%s\n", cmd)
 }
