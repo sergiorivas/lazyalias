@@ -125,6 +125,17 @@ cd '/projects/frontend' && npm run build
 - If you're outside the project directory, the command will include the necessary `cd` command
 
 ## With Arguments
+Commands can include interactive arguments that will be prompted when executing the command:
+
+- Use args to define a list of arguments for a command
+- Each argument requires:
+  - `name`: Description of what the argument is for
+  - `options`: Available options for the argument
+      - Use `*` for free text input
+      - Use `|` to separate fixed options (e.g., `option1|option2|option3`)
+- Reference arguments in commands using `$arg_1`, `$arg_2`, etc.
+
+Example `config.yaml`
 ```yaml
 frontend:
   folder: "/projects/frontend"
@@ -168,17 +179,6 @@ docker:
           options: "8080|3000|5432"
       command: "docker run -p $arg_2:$arg_2 --name $arg_1 $arg_1"
 ```
-
-##### Command Arguments
-Commands can include interactive arguments that will be prompted when executing the command:
-
-- Use args to define a list of arguments for a command
-- Each argument requires:
-  - name: Description of what the argument is for
-  - options: Available options for the argument
-      - Use "*" for free text input
-      - Use "|" to separate fixed options (e.g., "option1|option2|option3")
-- Reference arguments in commands using $arg_1, $arg_2, etc.
 
 ## Features
 - Interactive command selection menu
