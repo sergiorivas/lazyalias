@@ -31,14 +31,25 @@ func NewRunner() (*Runner, error) {
 }
 
 func (r *Runner) PrepareCommand(ctx ExecutionContext) string {
-	var command string
+	var finalCommand string
 
 	if ctx.TargetDir != "" && ctx.TargetDir != r.currentDir {
-		command += fmt.Sprintf("cd %s && ", shellescape(ctx.TargetDir))
+		finalCommand += fmt.Sprintf("cd %s && ", shellescape(ctx.TargetDir))
 	}
 
-	command += ctx.Command.Command
-	return command
+	command := ctx.Command.Command
+	if len(ctx.Command.Args) > 0 {
+		for i, arg := range ctx.Command.Args {
+			if arg.Value == "" {
+				continue
+			}
+			placeholder := fmt.Sprintf("$arg_%d", i+1)
+			command = strings.ReplaceAll(command, placeholder, arg.Value)
+		}
+	}
+
+	finalCommand += command
+	return finalCommand
 }
 
 func (r *Runner) CopyToClipboard(command string) error {

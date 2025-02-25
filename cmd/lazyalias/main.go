@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	version     = "v0.1.4"
+	version     = "v0.1.5"
 	showVersion = flag.Bool("version", false, "show version information")
 )
 
@@ -135,5 +135,5 @@ func main() {
 	}
 
 	fmt.Print(grayText("\nCommand to execute:"))
-	fmt.Printf("\n%s\n", cmd)
+	fmt.Printf("\n\033[32m%s\033[0m\n", cmd)
 }

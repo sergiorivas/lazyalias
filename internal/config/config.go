@@ -19,6 +19,13 @@ type Project struct {
 type Command struct {
 	Name    string `yaml:"name"`
 	Command string `yaml:"command"`
+	Args    []Arg  `yaml:"args"`
+}
+
+type Arg struct {
+	Name    string `yaml:"name"`
+	Options string `yaml:"options"`
+	Value   string
 }
 
 func LoadConfig(path string) (Config, error) {
