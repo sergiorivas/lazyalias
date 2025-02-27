@@ -9,7 +9,9 @@ import (
 	"strings"
 
 	"github.com/sergiorivas/lazyalias/internal/config"
+	"github.com/sergiorivas/lazyalias/internal/infra"
 	"github.com/sergiorivas/lazyalias/internal/runner"
+	"github.com/sergiorivas/lazyalias/internal/types"
 	"github.com/sergiorivas/lazyalias/internal/ui"
 )
 
@@ -32,7 +34,7 @@ func getCurrentProjectName() (string, error) {
 }
 
 // findProjectByName returns a project if it exists in the config
-func findProjectByName(cfg config.Config, name string) (config.Project, bool) {
+func findProjectByName(cfg config.Config, name string) (types.Project, bool) {
 	// First try exact match
 	if project, exists := cfg[name]; exists {
 		return project, true
@@ -46,7 +48,7 @@ func findProjectByName(cfg config.Config, name string) (config.Project, bool) {
 		}
 	}
 
-	return config.Project{}, false
+	return types.Project{}, false
 }
 
 func main() {
@@ -58,20 +60,23 @@ func main() {
 	}
 
 	fmt.Printf("Welcome to LAZYALIAS 🎉🎉🎉\n")
-	// Load configuration
-	homeDir, err := os.UserHomeDir()
+
+	fs := infra.NewOSFileSystem()
+	homeDir, err := fs.UserHomeDir()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	configPath := filepath.Join(homeDir, ".config", "lazyalias", "config.yaml")
-	cfg, err := config.LoadConfig(configPath)
+
+	configLoader := config.NewFileSystemConfigLoader(fs)
+	cfg, err := configLoader.LoadConfig(configPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	ui := ui.NewUI()
-	var project config.Project
+	var project types.Project
 
 	// Check if current directory matches a project
 	currentProjectName, err := getCurrentProjectName()
@@ -79,7 +84,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var projects []config.Project
+	var projects []types.Project
 	for _, p := range cfg {
 		projects = append(projects, p)
 	}
@@ -127,7 +132,8 @@ func main() {
 
 	cmd := r.PrepareCommand(ctx)
 
-	if err := r.CopyToClipboard(cmd); err != nil {
+	clipboard := infra.NewClipboard()
+	if err := clipboard.Copy(cmd); err != nil {
 		fmt.Printf("Could not copy to clipboard: %v\n", err)
 		fmt.Print("Please copy the command manually")
 	} else {

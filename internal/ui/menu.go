@@ -5,8 +5,14 @@ import (
 	"strings"
 
 	"github.com/manifoldco/promptui"
-	"github.com/sergiorivas/lazyalias/internal/config"
+	"github.com/sergiorivas/lazyalias/internal/types"
 )
+
+type CliUI interface {
+	ShowProjectMenu(projects []types.Project) (types.Project, error)
+	ShowCommandMenu(commands []types.Command) (types.Command, error)
+	ShowArgMenu(arg types.Arg) (string, error)
+}
 
 type UI struct{}
 
@@ -14,7 +20,7 @@ func NewUI() *UI {
 	return &UI{}
 }
 
-func (ui *UI) ShowProjectMenu(projects []config.Project) (config.Project, error) {
+func (ui *UI) ShowProjectMenu(projects []types.Project) (types.Project, error) {
 	templates := &promptui.SelectTemplates{
 		Label:    "{{ . }}",
 		Active:   "👉 {{ .Name | cyan }}",
@@ -36,13 +42,13 @@ func (ui *UI) ShowProjectMenu(projects []config.Project) (config.Project, error)
 
 	i, _, err := prompt.Run()
 	if err != nil {
-		return config.Project{}, err
+		return types.Project{}, err
 	}
 
 	return projects[i], nil
 }
 
-func (ui *UI) ShowArgMenu(arg config.Arg) (string, error) {
+func (ui *UI) ShowArgMenu(arg types.Arg) (string, error) {
 	if arg.Options == "*" || arg.Options == "" {
 
 		templates := &promptui.PromptTemplates{
@@ -91,8 +97,8 @@ func (ui *UI) ShowArgMenu(arg config.Arg) (string, error) {
 	return options[i], nil
 }
 
-func (ui *UI) ShowCommandMenu(commands []config.Command) (config.Command, error) {
-	backCommand := config.Command{
+func (ui *UI) ShowCommandMenu(commands []types.Command) (types.Command, error) {
+	backCommand := types.Command{
 		Name:    "⬅️ Back to Projects",
 		Command: "back-to-project",
 	}
@@ -118,7 +124,7 @@ func (ui *UI) ShowCommandMenu(commands []config.Command) (config.Command, error)
 
 	i, _, err := prompt.Run()
 	if err != nil {
-		return config.Command{}, err
+		return types.Command{}, err
 	}
 
 	if len(allCommands[i].Args) > 0 {
@@ -126,7 +132,7 @@ func (ui *UI) ShowCommandMenu(commands []config.Command) (config.Command, error)
 			value, err := ui.ShowArgMenu(arg)
 			allCommands[i].Args[j].Value = value
 			if err != nil {
-				return config.Command{}, err
+				return types.Command{}, err
 			}
 		}
 	}

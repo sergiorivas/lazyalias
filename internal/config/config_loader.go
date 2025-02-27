@@ -1,35 +1,30 @@
 package config
 
 import (
-	"os"
 	"path/filepath"
 
 	"gopkg.in/yaml.v3"
+
+	"github.com/sergiorivas/lazyalias/internal/infra"
+	"github.com/sergiorivas/lazyalias/internal/types"
 )
 
-type Config map[string]Project
+type Config map[string]types.Project
 
-type Project struct {
-	Name     string    `yaml:"name"`
-	Commands []Command `yaml:"commands"`
-	Folder   string    `yaml:"folder,omitempty"`
-	Key      string    `yaml:"-"` // This will store the map key
+type ConfigLoader interface {
+	LoadConfig(path string) (Config, error)
 }
 
-type Command struct {
-	Name    string `yaml:"name"`
-	Command string `yaml:"command"`
-	Args    []Arg  `yaml:"args"`
+type FileSystemConfigLoader struct {
+	fs infra.FileSystem
 }
 
-type Arg struct {
-	Name    string `yaml:"name"`
-	Options string `yaml:"options"`
-	Value   string
+func NewFileSystemConfigLoader(fs infra.FileSystem) *FileSystemConfigLoader {
+	return &FileSystemConfigLoader{fs: fs}
 }
 
-func LoadConfig(path string) (Config, error) {
-	data, err := os.ReadFile(path)
+func (l *FileSystemConfigLoader) LoadConfig(path string) (Config, error) {
+	data, err := l.fs.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
