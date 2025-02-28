@@ -1,5 +1,4 @@
-// internal/runner/runner_test.go
-package runner
+package core
 
 import (
 	"testing"
@@ -9,7 +8,7 @@ import (
 )
 
 func TestPrepareCommand(t *testing.T) {
-	r := &Runner{currentDir: "/current/dir"}
+	r := &CommandBuilder{currentDir: "/current/dir"}
 	ctx := ExecutionContext{
 		TargetDir: "/target/dir",
 		Command: types.Command{
@@ -20,7 +19,7 @@ func TestPrepareCommand(t *testing.T) {
 		},
 	}
 
-	result := r.PrepareCommand(ctx)
+	result := r.Build(ctx)
 
 	expected := "cd '/target/dir' && echo hello"
 	assert.Equal(t, expected, result)

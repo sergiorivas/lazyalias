@@ -1,4 +1,4 @@
-package runner
+package core
 
 import (
 	"fmt"
@@ -16,19 +16,23 @@ type ExecutionContext struct {
 	Project     types.Project
 }
 
-type Runner struct {
+type CommandBuilder struct {
 	currentDir string
 }
 
-func NewRunner() (*Runner, error) {
+func shellescape(s string) string {
+	return fmt.Sprintf("'%s'", filepath.ToSlash(s))
+}
+
+func NewCommandBuilder() (*CommandBuilder, error) {
 	currentDir, err := os.Getwd()
 	if err != nil {
 		return nil, err
 	}
-	return &Runner{currentDir: currentDir}, nil
+	return &CommandBuilder{currentDir: currentDir}, nil
 }
 
-func (r *Runner) PrepareCommand(ctx ExecutionContext) string {
+func (r *CommandBuilder) Build(ctx ExecutionContext) string {
 	var finalCommand string
 
 	if ctx.TargetDir != "" && ctx.TargetDir != r.currentDir {
@@ -48,9 +52,4 @@ func (r *Runner) PrepareCommand(ctx ExecutionContext) string {
 
 	finalCommand += command
 	return finalCommand
-}
-
-// shellescape escapes a string to be used in shell
-func shellescape(s string) string {
-	return fmt.Sprintf("'%s'", filepath.ToSlash(s))
 }
