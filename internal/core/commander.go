@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/fatih/color"
+
 	"github.com/sergiorivas/lazyalias/internal/config"
 	"github.com/sergiorivas/lazyalias/internal/infra"
 	"github.com/sergiorivas/lazyalias/internal/types"
@@ -32,10 +34,6 @@ func NewCommander() *Commander {
 		commandBuilder: *commandBuilder,
 		clipboard:      clipboard,
 	}
-}
-
-func grayText(text string) string {
-	return fmt.Sprintf("\033[90m%s\033[0m", text)
 }
 
 // getCurrentProjectName returns the name of the current directory
@@ -141,11 +139,11 @@ func (c *Commander) Run() error {
 		fmt.Printf("Could not copy to clipboard: %v\n", err)
 		fmt.Print("Please copy the command manually")
 	} else {
-		fmt.Print(grayText("Command has been copied to clipboard!"))
+		color.RGB(127, 127, 127).Print("Command has been copied to clipboard!\n")
 	}
 
-	fmt.Print(grayText("\nCommand to execute:"))
-	fmt.Printf("\n\033[32m%s\033[0m\n", cmd)
+	color.RGB(127, 127, 127).Print("Command to execute:\n")
+	color.Green("%s\n", cmd)
 
 	return nil
 }
