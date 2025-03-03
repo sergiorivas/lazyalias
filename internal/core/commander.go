@@ -55,7 +55,7 @@ func findProjectByName(cfg config.Config, name string) (types.Project, bool) {
 	// Then try case-insensitive match
 	name = strings.ToLower(name)
 	for key, project := range cfg {
-		if strings.ToLower(key) == name {
+		if strings.EqualFold(key, name) {
 			return project, true
 		}
 	}
@@ -133,7 +133,7 @@ func (c *Commander) Run() error {
 		Project:   project,
 	}
 
-	cmd := c.commandBuilder.Build(ctx)
+	cmd := c.commandBuilder.Build(&ctx)
 
 	if err := c.clipboard.Copy(cmd); err != nil {
 		fmt.Printf("Could not copy to clipboard: %v\n", err)

@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 
 	"github.com/sergiorivas/lazyalias/internal/core"
 )
@@ -22,5 +23,9 @@ func main() {
 
 	fmt.Printf("Welcome to LAZYALIAS 🎉🎉🎉\n")
 	commander := core.NewCommander()
-	commander.Run()
+	err := commander.Run()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }

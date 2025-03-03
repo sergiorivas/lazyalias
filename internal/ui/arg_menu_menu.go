@@ -10,7 +10,6 @@ import (
 
 func (ui *UI) ShowArgMenu(arg types.Arg) (string, error) {
 	if arg.Options == "*" || arg.Options == "" {
-
 		templates := &promptui.PromptTemplates{
 			Prompt:  "{{ . }} ",
 			Valid:   "{{ .  }} ",

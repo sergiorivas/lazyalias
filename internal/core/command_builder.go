@@ -32,7 +32,7 @@ func NewCommandBuilder() (*CommandBuilder, error) {
 	return &CommandBuilder{currentDir: currentDir}, nil
 }
 
-func (r *CommandBuilder) Build(ctx ExecutionContext) string {
+func (r *CommandBuilder) Build(ctx *ExecutionContext) string {
 	var finalCommand string
 
 	if ctx.TargetDir != "" && ctx.TargetDir != r.currentDir {

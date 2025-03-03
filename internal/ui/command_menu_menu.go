@@ -10,7 +10,8 @@ func (ui *UI) ShowCommandMenu(commands []types.Command) (types.Command, error) {
 		Name:    "⬅️ Back to Projects",
 		Command: BackToProject,
 	}
-	allCommands := append(commands, backCommand)
+	allCommands := commands
+	allCommands = append(allCommands, backCommand)
 
 	templates := &promptui.SelectTemplates{
 		Label:    "{{ . }}",

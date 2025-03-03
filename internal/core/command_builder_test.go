@@ -19,7 +19,7 @@ func TestPrepareCommand(t *testing.T) {
 		},
 	}
 
-	result := r.Build(ctx)
+	result := r.Build(&ctx)
 
 	expected := "cd '/target/dir' && echo hello"
 	assert.Equal(t, expected, result)
