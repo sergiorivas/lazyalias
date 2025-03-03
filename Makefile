@@ -27,7 +27,7 @@ else
 endif
 
 build:
-	$(GOBUILD) -o bin/$(BINARY_NAME) $(MAIN_PATH)
+	$(GOBUILD) -ldflags="-w -s" -o bin/$(BINARY_NAME) $(MAIN_PATH)
 
 run:
 	$(GORUN) $(MAIN_PATH)

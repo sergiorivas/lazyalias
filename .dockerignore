@@ -1,0 +1,45 @@
+.git
+.gitignore
+
+Dockerfile
+.dockerignore
+
+.idea/
+.vscode/
+*.swp
+*.swo
+
+bin/
+dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Archivos de test y coverage
+*.test
+*.out
+coverage.txt
+coverage.html
+
+# Archivos temporales
+tmp/
+temp/
+
+# Logs
+*.log
+logs/
+
+# Dependencias
+vendor/
+
+# Archivos de ambiente
+.env
+.env.*
+*.local
+
+README.md
+LICENSE
+docs/
+*.md
