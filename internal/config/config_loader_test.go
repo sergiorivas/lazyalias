@@ -35,11 +35,12 @@ project1:
     - name: "Test Command"
       command: "echo hello"
 `)
-	mockFS.On("ReadFile", "/test/config.yaml").Return(validYaml, nil)
+	mockFS.On("UserHomeDir").Return("/home/user", nil)
+	mockFS.On("ReadFile", "/home/user/.config/lazyalias/config.yaml").Return(validYaml, nil)
 
 	loader := NewFileSystemConfigLoader(mockFS)
 
-	config, err := loader.LoadConfig("/test/config.yaml")
+	config, err := loader.LoadConfig()
 
 	assert.NoError(t, err)
 	assert.NotNil(t, config)

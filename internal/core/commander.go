@@ -63,23 +63,8 @@ func findProjectByName(cfg config.Config, name string) (types.Project, bool) {
 	return types.Project{}, false
 }
 
-func getConfigPath() (string, error) {
-	fs := infra.NewOSFileSystem()
-	homeDir, err := fs.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-
-	return filepath.Join(homeDir, ".config", "lazyalias", "config.yaml"), nil
-}
-
 func (c *Commander) Run() error {
-	configPath, err := getConfigPath()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	cfg, err := c.configLoader.LoadConfig(configPath)
+	cfg, err := c.configLoader.LoadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}

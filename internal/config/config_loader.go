@@ -12,7 +12,7 @@ import (
 type Config map[string]types.Project
 
 type ConfigLoader interface {
-	LoadConfig(path string) (Config, error)
+	LoadConfig() (Config, error)
 }
 
 type FileSystemConfigLoader struct {
@@ -23,8 +23,22 @@ func NewFileSystemConfigLoader(fs infra.FileSystem) *FileSystemConfigLoader {
 	return &FileSystemConfigLoader{fs: fs}
 }
 
-func (l *FileSystemConfigLoader) LoadConfig(path string) (Config, error) {
-	data, err := l.fs.ReadFile(path)
+func (l *FileSystemConfigLoader) getConfigPath() (string, error) {
+	homeDir, err := l.fs.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(homeDir, ".config", "lazyalias", "config.yaml"), nil
+}
+
+func (l *FileSystemConfigLoader) LoadConfig() (Config, error) {
+	configPath, err := l.getConfigPath()
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := l.fs.ReadFile(configPath)
 	if err != nil {
 		return nil, err
 	}
