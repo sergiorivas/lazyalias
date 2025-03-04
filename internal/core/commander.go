@@ -99,6 +99,8 @@ func (c *Commander) Run() error {
 
 	if matchedProject, found := findProjectByName(cfg, currentProjectName); found {
 		project = matchedProject
+		green := color.New(color.FgGreen).SprintFunc()
+		fmt.Printf("🗂️ Selected Project: %s\n", green(project.Name))
 	} else {
 		project, err = c.ui.ShowProjectMenu(projects)
 		if err != nil {
