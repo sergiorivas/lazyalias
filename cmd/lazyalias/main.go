@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	version     = "v0.1.5"
+	version     = "v0.1.7"
 	showVersion = flag.Bool("version", false, "show version information")
 )
 
