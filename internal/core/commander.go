@@ -20,6 +20,7 @@ type Commander struct {
 	ui             ui.UI
 	commandBuilder CommandBuilder
 	clipboard      infra.Clipboard
+	history        infra.HistoryFileUpdater
 }
 
 func NewCommander() *Commander {
@@ -27,12 +28,14 @@ func NewCommander() *Commander {
 	ui := ui.NewUI()
 	commandBuilder, _ := NewCommandBuilder()
 	clipboard := infra.NewClipboard()
+	history, _ := infra.NewHistoryFileUpdater()
 
 	return &Commander{
 		configLoader:   configLoader,
 		ui:             *ui,
 		commandBuilder: *commandBuilder,
 		clipboard:      clipboard,
+		history:        *history,
 	}
 }
 
@@ -122,11 +125,17 @@ func (c *Commander) Run() error {
 
 	cmd := c.commandBuilder.Build(&ctx)
 
-	if err := c.clipboard.Copy(cmd); err != nil {
+	err = c.clipboard.Copy(cmd)
+	if err != nil {
 		fmt.Printf("Could not copy to clipboard: %v\n", err)
 		fmt.Print("Please copy the command manually")
 	} else {
 		color.RGB(127, 127, 127).Print("Command has been copied to clipboard!\n")
+	}
+
+	err = c.history.Add(cmd)
+	if err != nil {
+		fmt.Printf("Could not save to history: %v\n", err)
 	}
 
 	color.RGB(127, 127, 127).Print("Command to execute:\n")
