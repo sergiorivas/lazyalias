@@ -11,11 +11,6 @@ func (ui *UI) ShowProjectMenu(projects []types.Project) (types.Project, error) {
 		Active:   "👉 {{ .Name | cyan }}",
 		Inactive: "  {{ .Name | white }}",
 		Selected: "🗂️ Selected Project: {{ .Name | green }}",
-		Details: `
---------- Project ----------
-{{ "Name:" | faint }}	{{ .Name }}
-{{ "Commands:" | faint }}	{{ len .Commands }} available
-{{ if .Folder }}{{ "Folder:" | faint }}	{{ .Folder }}{{ end }}`,
 	}
 
 	prompt := promptui.Select{

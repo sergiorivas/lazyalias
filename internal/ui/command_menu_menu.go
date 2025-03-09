@@ -18,10 +18,10 @@ func (ui *UI) ShowCommandMenu(commands []types.Command) (types.Command, error) {
 		Active:   "👉 {{ .Name | cyan }}",
 		Inactive: "  {{ .Name | white }}",
 		Selected: "{{ if ne .Command \"" + BackToProject + "\" }}📟 Selected Command: {{ .Name | green }} {{ else }}{{ .Name }} {{ end }}",
-		Details: `
+		Details: `{{ if ne .Command "` + BackToProject + `" }}
 --------- Command ----------
-{{ "Name:" | faint }}	{{ .Name }}
-{{ "Command:" | faint }}	{{ .Command }}`,
+{{ .Command | green }}
+{{ end }}`,
 	}
 
 	prompt := promptui.Select{
