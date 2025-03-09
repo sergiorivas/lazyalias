@@ -2,6 +2,7 @@ package config
 
 import (
 	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 
@@ -23,45 +24,59 @@ func NewFileSystemConfigLoader(fs infra.FileSystem) *FileSystemConfigLoader {
 	return &FileSystemConfigLoader{fs: fs}
 }
 
-func (l *FileSystemConfigLoader) getConfigPath() (string, error) {
+func (l *FileSystemConfigLoader) getConfigDir() (string, error) {
 	homeDir, err := l.fs.UserHomeDir()
 	if err != nil {
 		return "", err
 	}
 
-	return filepath.Join(homeDir, ".config", "lazyalias", "config.yaml"), nil
+	return filepath.Join(homeDir, ".config", "lazyalias"), nil
 }
 
 func (l *FileSystemConfigLoader) LoadConfig() (Config, error) {
-	configPath, err := l.getConfigPath()
+	configDir, err := l.getConfigDir()
 	if err != nil {
 		return nil, err
 	}
 
-	data, err := l.fs.ReadFile(configPath)
+	files, err := l.fs.ReadDir(configDir)
 	if err != nil {
 		return nil, err
 	}
 
-	var config Config
-	if err := yaml.Unmarshal(data, &config); err != nil {
-		return nil, err
-	}
+	config := make(Config)
 
-	for key, project := range config {
-		project.Key = key
-		if project.Name == "" {
-			project.Name = key
+	for _, file := range files {
+		if file.IsDir() || !strings.HasSuffix(file.Name(), ".yaml") {
+			continue
 		}
-		if project.Folder != "" {
-			absPath, err := filepath.Abs(project.Folder)
-			if err != nil {
-				return nil, err
+
+		filePath := filepath.Join(configDir, file.Name())
+		data, err := l.fs.ReadFile(filePath)
+		if err != nil {
+			return nil, err
+		}
+
+		var fileConfig Config
+		if err := yaml.Unmarshal(data, &fileConfig); err != nil {
+			return nil, err
+		}
+
+		for key, project := range fileConfig {
+			project.Key = key
+			if project.Name == "" {
+				project.Name = key
 			}
-			project.Folder = absPath
-			config[key] = project
-		} else {
-			config[key] = project
+			if project.Folder != "" {
+				absPath, err := filepath.Abs(project.Folder)
+				if err != nil {
+					return nil, err
+				}
+				project.Folder = absPath
+				config[key] = project
+			} else {
+				config[key] = project
+			}
 		}
 	}
 

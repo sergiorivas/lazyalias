@@ -6,6 +6,7 @@ type FileSystem interface {
 	ReadFile(path string) ([]byte, error)
 	Getwd() (string, error)
 	UserHomeDir() (string, error)
+	ReadDir(string) ([]os.DirEntry, error)
 }
 
 type OSFileSystem struct{}
@@ -20,6 +21,10 @@ func (fs *OSFileSystem) Getwd() (string, error) {
 
 func (fs *OSFileSystem) UserHomeDir() (string, error) {
 	return os.UserHomeDir()
+}
+
+func (fs *OSFileSystem) ReadDir(configDir string) ([]os.DirEntry, error) {
+	return os.ReadDir(configDir)
 }
 
 func NewOSFileSystem() *OSFileSystem {
