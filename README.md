@@ -1,10 +1,5 @@
 # LazyAlias
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/sergiorivas/lazyalias)](https://goreportcard.com/report/github.com/sergiorivas/lazyalias)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/sergiorivas/lazyalias)](https://github.com/sergiorivas/lazyalias/releases)
-[![GitHub stars](https://img.shields.io/github/stars/sergiorivas/lazyalias)](https://github.com/sergiorivas/lazyalias/stargazers)
-
 > 🚀 A smart command-line tool for managing and executing your frequently used commands across different projects with an interactive menu.
 
 ## 📋 Table of Contents
