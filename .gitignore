@@ -47,3 +47,5 @@ Desktop.ini
 
 config.local.yaml
 *.
+
+.vscode/
