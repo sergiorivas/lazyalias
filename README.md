@@ -1,6 +1,53 @@
 # LazyAlias
 
-LazyAlias is a command-line tool that helps you manage and execute frequently used commands across different projects. It provides an interactive menu to select commands defined in a YAML configuration file and copies them to your clipboard for easy execution.
+[![Go Report Card](https://goreportcard.com/badge/github.com/sergiorivas/lazyalias)](https://goreportcard.com/report/github.com/sergiorivas/lazyalias)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/sergiorivas/lazyalias)](https://github.com/sergiorivas/lazyalias/releases)
+[![GitHub stars](https://img.shields.io/github/stars/sergiorivas/lazyalias)](https://github.com/sergiorivas/lazyalias/stargazers)
+
+> 🚀 A smart command-line tool for managing and executing your frequently used commands across different projects with an interactive menu.
+
+## 📋 Table of Contents
+- [Why LazyAlias?](#-why-lazyalias)
+- [Quick Start](#-quick-start)
+- [Installation](#installation)
+- [Configuration](#-configuration)
+- [Usage](#usage)
+- [Features](#-features)
+- [Shell Integration](#-shell-integration)
+- [Keyboard Shortcuts](#-keyboard-shortcuts)
+- [Troubleshooting](#-troubleshooting)
+- [Contributing](#-contributing)
+
+## 🤔 Why LazyAlias?
+
+Tired of remembering and typing long commands for your different projects? LazyAlias solves this by providing:
+
+- 🎯 Quick access to your most-used commands
+- 🎨 Interactive menu for easy command selection
+- 📂 Project-specific command organization
+- ⚡️ Support for command arguments and options
+- 🔄 Automatic directory switching
+- 📋 One-click command execution
+
+Whether you're working with multiple projects or just want to streamline your workflow, LazyAlias makes command execution faster and more intuitive.
+
+## 🚀 Quick Start
+
+```bash
+# Install with Homebrew
+brew install sergiorivas/tap/lazyalias
+
+# Or install with Go
+go install github.com/sergiorivas/lazyalias/cmd/lazyalias@latest
+
+# Create your config file
+mkdir -p ~/.config/lazyalias
+touch ~/.config/lazyalias/config.yaml
+
+# Run LazyAlias
+lazyalias
+```
 
 ## Installation
 
@@ -16,8 +63,9 @@ brew install sergiorivas/tap/lazyalias
 go install github.com/sergiorivas/lazyalias/cmd/lazyalias@latest
 ```
 
-## Configuration
-Create a config.yaml file in your home directory `~/.config/lazyalias/config.yaml`:
+## 🔧 Configuration
+
+Create a config file at `~/.config/lazyalias/config.yaml`. Here's a basic example:
 
 ```yaml
 frontend:
@@ -180,35 +228,92 @@ docker:
       command: "docker run -p $arg_2:$arg_2 --name $arg_1 $arg_1"
 ```
 
-## Features
-- Interactive command selection menu
-- Project-specific command sets
-- Command arguments with:
+## 🎯 Features
+
+- 🎨 Interactive command selection menu
+- 📂 Project-specific command sets
+- ⚡️ Command arguments with:
   - Free text input
   - Predefined options
   - Multiple arguments support
-- Automatic directory switching
-- Command copied to clipboard for easy execution
-- Simple YAML configuration
-- Support for any shell command
-- Project aliases/names for better organization
+- 🔄 Automatic directory switching
+- 📋 Command copied to clipboard for easy execution
+- 📝 Simple YAML configuration
+- 🛠️ Support for any shell command
+- 🏷️ Project aliases/names for better organization
 
-## Integration with Ghostty
-You can easy integrate `lazyalias` with [Ghostty](https://ghostty.org/) by adding this the ghostty config `~/.config/ghostty/config`
+## 🔌 Shell Integration
+
+### Ghostty
+Add this to your Ghostty config (`~/.config/ghostty/config`):
 
 ```
 keybind=super+shift+l=text:lazyalias && eval "$(pbpaste)"\n
 ```
 
-After that you can press `command + shift + l` and it will launch `lazyalias`
+### Fish Shell
+Add this to your Fish config (`~/.config/fish/config.fish`):
 
-Notes:
-  - Using `pbpaste` on Macos, but you can use another command for your OS
-  - Using `command` key on Macos, but you can use `ctrl` key for your OS
+```fish
+bind \cs 'lazyalias && eval (pbpaste)'
+```
 
-## Contributing
-- Contributions are welcome! Please feel free to submit a Pull Request.
+### Bash/Zsh
+Add this to your `.bashrc` or `.zshrc`:
 
-## License
-- MIT License
-Example with arguments:
+```bash
+bind '"\C-s": "lazyalias && eval $(pbpaste)\n"'
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## ⭐️ Show Your Support
+
+Give a ⭐️ if this project helped you!
+
+## ⌨️ Keyboard Shortcuts
+
+- `↑/↓`: Navigate through options
+- `Enter`: Select option
+- `Esc`: Go back/exit
+- `Ctrl+C`: Exit at any time
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+1. **Command not found**
+   - Ensure LazyAlias is properly installed
+   - Check if the binary is in your PATH
+   - Try reinstalling with `brew reinstall lazyalias` or `go install github.com/sergiorivas/lazyalias/cmd/lazyalias@latest`
+
+2. **Config file not found**
+   - Verify the config file exists at `~/.config/lazyalias/config.yaml`
+   - Check file permissions
+   - Ensure YAML syntax is correct
+
+3. **Shell integration not working**
+   - Verify the shell config changes are saved
+   - Restart your terminal
+   - Check if the keybinding conflicts with other applications
+
+### Getting Help
+
+- Check the [GitHub Issues](https://github.com/sergiorivas/lazyalias/issues)
+- Open a new issue with:
+  - Your OS and version
+  - Installation method
+  - Error message
+  - Steps to reproduce
