@@ -1,17 +1,17 @@
 {
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Interactive CLI to manage frequent commands with YAML config and clipboard support",
   "homepage": "https://github.com/sergiorivas/lazyalias",
   "license": "MIT",
   "architecture": {
     "64bit": {
-      "url": "https://github.com/sergiorivas/lazyalias/releases/download/v0.1.16/lazyalias-windows-amd64.exe",
-      "hash": "e9c951260f8dc684531a7b52f98e6b238fe56396ee325593f2469655da312e0a",
+      "url": "https://github.com/sergiorivas/lazyalias/releases/download/v0.1.17/lazyalias-windows-amd64.exe",
+      "hash": "300a936334f340a5d5565671b8408d027cd0ecacedb6fdb3e5cbd6899031b2c2",
       "bin": "lazyalias-windows-amd64.exe"
     },
     "arm64": {
-      "url": "https://github.com/sergiorivas/lazyalias/releases/download/v0.1.16/lazyalias-windows-arm64.exe",
-      "hash": "d0da4a4615bf31507f82fdf8bb86cf75cce16c70c554da9f3c135f7d023103b5",
+      "url": "https://github.com/sergiorivas/lazyalias/releases/download/v0.1.17/lazyalias-windows-arm64.exe",
+      "hash": "1f45436ec960f3ddd09e21565cf0545508f4438a1da082eedc3e302e7b10390f",
       "bin": "lazyalias-windows-arm64.exe"
     }
   }
