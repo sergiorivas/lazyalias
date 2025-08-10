@@ -1,20 +1,43 @@
 class Lazyalias < Formula
-  desc "LazyAlias: interactive CLI to manage and run frequently used project commands"
+  desc "Interactive CLI to manage frequent commands with YAML config and clipboard support"
   homepage "https://github.com/sergiorivas/lazyalias"
-  url "https://github.com/sergiorivas/lazyalias/archive/refs/tags/v0.1.13.tar.gz"
-  sha256 "d5558cd419c8d46bdc958064cb97f963d1ea793866414c025906ec15033512ed"
-  license "MIT"
+  version "NEW_VERSION"
 
-  depends_on "go" => :build
-
-  def install
-    system "go", "build", "-o", bin/"lazyalias", "./cmd/lazyalias"
+  on_macos do
+    on_arm do
+      url "https://github.com/sergiorivas/lazyalias/releases/download/vNEW_VERSION/lazyalias-darwin-arm64"
+      sha256 "SHA256_DARWIN_ARM64"
+      def install
+        bin.install "lazyalias-darwin-arm64" => "lazyalias"
+      end
+    end
+    on_intel do
+      url "https://github.com/sergiorivas/lazyalias/releases/download/vNEW_VERSION/lazyalias-darwin-amd64"
+      sha256 "SHA256_DARWIN_AMD64"
+      def install
+        bin.install "lazyalias-darwin-amd64" => "lazyalias"
+      end
+    end
   end
 
-  def caveats
-    <<~EOS
-      LazyAlias builds from source via Homebrew (macOS/Linux).
-      Windows users: download the .exe from GitHub Releases.
-    EOS
+  on_linux do
+    on_arm do
+      url "https://github.com/sergiorivas/lazyalias/releases/download/vNEW_VERSION/lazyalias-linux-arm64"
+      sha256 "SHA256_LINUX_ARM64"
+      def install
+        bin.install "lazyalias-linux-arm64" => "lazyalias"
+      end
+    end
+    on_intel do
+      url "https://github.com/sergiorivas/lazyalias/releases/download/vNEW_VERSION/lazyalias-linux-amd64"
+      sha256 "SHA256_LINUX_AMD64"
+      def install
+        bin.install "lazyalias-linux-amd64" => "lazyalias"
+      end
+    end
+  end
+
+  test do
+    assert_match "Welcome", shell_output("#{bin}/lazyalias 2>&1", 1)
   end
 end
