@@ -6,6 +6,7 @@ tmp/
 *.so
 *.dylib
 dist/
+bin/
 
 *.test
 *.out
