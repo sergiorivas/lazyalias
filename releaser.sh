@@ -8,6 +8,10 @@ set -euo pipefail
 # - Updates Homebrew Formula (macOS+Linux) and Scoop manifest (Windows)
 # - Commits, tags, pushes
 # - Publishes GitHub Release with assets via gh
+#
+# Version normalization:
+# - VERSION file is stored without a leading "v" (e.g., 0.1.15)
+# - Git tag and release assets use a leading "v" (e.g., v0.1.15)
 
 REPO_OWNER="sergiorivas"
 REPO_NAME="lazyalias"
@@ -15,10 +19,7 @@ FORMULA_PATH="Formula/lazyalias.rb"
 SCOOP_PATH="scoop/lazyalias.json"
 
 require() {
-  command -v "$1" >/dev/null 2>&1 || {
-    echo "Missing dependency: $1"
-    exit 1
-  }
+  command -v "$1" >/dev/null 2>&1 || { echo "Missing dependency: $1"; exit 1; }
 }
 
 require gum
@@ -42,16 +43,17 @@ fi
 git fetch --tags >/dev/null 2>&1 || true
 
 # 1) Choose version bump
-CURRENT_VERSION="$(tr -d ' \n' < VERSION)"
-section "Current version: ${CURRENT_VERSION}"
+CURRENT_VERSION_RAW="$(tr -d ' \n' < VERSION || true)"
+CURRENT_VERSION="${CURRENT_VERSION_RAW#v}"  # strip leading 'v' if present
+[[ -n "${CURRENT_VERSION}" ]] || { err "VERSION file is empty"; exit 1; }
 
+section "Current version: v${CURRENT_VERSION}"
 CHOICE="$(gum choose --header="Select version bump" patch minor major custom)"
 if [[ "$CHOICE" == "custom" ]]; then
-  NEW_VERSION="$(gum input --placeholder "e.g. 0.1.12" --prompt "Enter new version: ")"
-  [[ "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
-    err "Invalid semantic version: $NEW_VERSION"
-    exit 1
-  }
+  INPUT="$(gum input --placeholder "e.g. 0.1.15 or v0.1.15" --prompt "Enter new version: ")"
+  INPUT="${INPUT#v}"  # allow entering with or without 'v'
+  [[ "$INPUT" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { err "Invalid semantic version: $INPUT"; exit 1; }
+  NEW_VERSION="$INPUT"
 else
   IFS='.' read -r MA MI PA <<<"$CURRENT_VERSION"
   case "$CHOICE" in
@@ -65,12 +67,12 @@ NEW_TAG="v${NEW_VERSION}"
 
 gum style --border normal --padding "1 2" --margin "1 0" \
   "Release summary" \
-  "From: ${CURRENT_VERSION}" \
-  "To:   ${NEW_VERSION} (${NEW_TAG})"
+  "From: v${CURRENT_VERSION}" \
+  "To:   ${NEW_TAG}"
 
 gum confirm "Proceed with release?" || { warn "Aborted."; exit 0; }
 
-# 2) Update VERSION
+# 2) Update VERSION (store without 'v')
 section "Updating VERSION"
 printf "%s\n" "${NEW_VERSION}" > VERSION
 ok "VERSION updated to ${NEW_VERSION}"
@@ -86,7 +88,6 @@ section "Generating SHA256SUMS"
 gum spin --title "make sha256" -- make sha256
 [[ -f SHA256SUMS ]] || { err "SHA256SUMS not generated"; exit 1; }
 
-# Helper to extract checksum for a specific artifact
 checksum() { awk -v f="bin/$1" '$2==f {print $1}' SHA256SUMS; }
 
 SHA_DARWIN_AMD64="$(checksum 'lazyalias-darwin-amd64')"
