@@ -5,7 +5,6 @@ tmp/
 *.dll
 *.so
 *.dylib
-bin/
 dist/
 
 *.test
