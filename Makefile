@@ -1,3 +1,6 @@
+# Generate SHA256 checksums for all built binaries
+sha256:
+	shasum -a 256 bin/lazyalias-* > SHA256SUMS
 BINARY_NAME=lazyalias
 MAIN_PATH=./cmd/lazyalias/main.go
 COVERAGE_FILE=coverage.out
@@ -26,8 +29,37 @@ else
 	@echo "Por favor, instala golangci-lint manualmente desde https://golangci-lint.run/usage/install/"
 endif
 
-build:
-	$(GOBUILD) -ldflags="-w -s" -o bin/$(BINARY_NAME) $(MAIN_PATH)
+
+# Versioning
+VERSION := $(shell cat VERSION)
+LDFLAGS=-ldflags="-w -s -X 'main.version=$(VERSION)'"
+
+# Cross-compile for Linux (amd64)
+build-linux-amd64:
+	GOOS=linux GOARCH=amd64 $(GOBUILD) $(LDFLAGS) -o bin/$(BINARY_NAME)-linux-amd64 $(MAIN_PATH)
+
+# Cross-compile for Linux (arm64)
+build-linux-arm64:
+	GOOS=linux GOARCH=arm64 $(GOBUILD) $(LDFLAGS) -o bin/$(BINARY_NAME)-linux-arm64 $(MAIN_PATH)
+
+# Cross-compile for macOS (amd64)
+build-darwin-amd64:
+	GOOS=darwin GOARCH=amd64 $(GOBUILD) $(LDFLAGS) -o bin/$(BINARY_NAME)-darwin-amd64 $(MAIN_PATH)
+
+# Cross-compile for macOS (arm64)
+build-darwin-arm64:
+	GOOS=darwin GOARCH=arm64 $(GOBUILD) $(LDFLAGS) -o bin/$(BINARY_NAME)-darwin-arm64 $(MAIN_PATH)
+
+# Cross-compile for Windows (amd64)
+build-windows-amd64:
+	GOOS=windows GOARCH=amd64 $(GOBUILD) $(LDFLAGS) -o bin/$(BINARY_NAME)-windows-amd64.exe $(MAIN_PATH)
+
+# Cross-compile for Windows (arm64)
+build-windows-arm64:
+	GOOS=windows GOARCH=arm64 $(GOBUILD) $(LDFLAGS) -o bin/$(BINARY_NAME)-windows-arm64.exe $(MAIN_PATH)
+
+# Build all targets
+build: build-linux-amd64 build-linux-arm64 build-darwin-amd64 build-darwin-arm64 build-windows-amd64 build-windows-arm64
 
 run:
 	$(GORUN) $(MAIN_PATH)

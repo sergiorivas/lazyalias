@@ -31,7 +31,7 @@ Whether you're working with multiple projects or just want to streamline your wo
 
 ```bash
 # Install with Homebrew
-brew install sergiorivas/tap/lazyalias
+brew install sergiorivas/lazyalias/lazyalias
 
 # Or install with Go
 go install github.com/sergiorivas/lazyalias/cmd/lazyalias@latest
@@ -49,7 +49,7 @@ lazyalias
 #### With brew
 
 ```bash
-brew install sergiorivas/tap/lazyalias
+brew install sergiorivas/lazyalias/lazyalias
 ```
 
 #### With go
